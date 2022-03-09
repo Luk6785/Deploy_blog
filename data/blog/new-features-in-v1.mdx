@@ -1,40 +1,72 @@
 ---
-title: 'New features in v1'
+title: 'Tạo một chương trình quét đơn giản bằng Winform CLR'
 date: 2021-08-07T15:32:14Z
 lastmod: '2021-12-15'
-tags: ['next-js', 'tailwind', 'guide']
+tags: ['Winform', 'CLI/C++', 'Multi Threading']
 draft: false
-summary: 'An overview of the new features released in v1 - code block copy, multiple authors, frontmatter layout and more'
+summary: 'Sử dụng mã hex để so sánh signature và lập trình đa luồng cho nó'
 layout: PostSimple
 bibliography: references-data.bib
 ---
 
-## Overview
+## 1.Bước đầu tạo giao diện đơn giản
 
-A post on the new features introduced in v1.0. New features:
+Mình dùng Visual Studio 2022:
 
-<TOCInline toc={props.toc} exclude="Overview" toHeading={2} />
-
-First load JS decreased from 43kB to 39kB despite all the new features added!^[With the new changes in Nextjs 12, first load JS increase to 45kB.]
-
-See [upgrade guide](#upgrade-guide) below if you are migrating from v0 version of the template.
+sss
 
 ## Theme colors
 
-You can easily modify the theme color by changing the primary attribute in the tailwind config file:
+Mình có một chương trình nhỏ kiểm tra xem mã hex đó có ở trong file hay không và không kiểm tra những file lớn hơn 50MB.
 
-```js:tailwind.config.js
-theme: {
-    colors: {
-      primary: colors.teal,
-      gray: colors.neutral,
-      ...
-    }
-  ...
-}
+```js:MyForm.h
+//-------------------------Thread--------------------------
+	int n = 0;
+	void test_thread(Object^ data) {
+		msclr::interop::marshal_context context3;
+		System::String^ con = cli::safe_cast<System::String^>(data);
+		string path = context3.marshal_as<std::string>(con);
+
+		std::ifstream in(path, std::ifstream::ate | std::ifstream::binary);
+		if (in.is_open()) {
+			if (in.tellg() > 1000000) {
+				System::String^ namee = gcnew String(path.c_str());
+				textBox2->Text += namee + "----- File lon hon 50MB" + "\r\n";
+			}
+			else {
+				msclr::interop::marshal_context context;
+				std::string flag = context.marshal_as<std::string>(textBox3->Text);
+				ifstream in(path, ios::in | ios::binary);
+				std::string result;
+				string line;
+				while (getline(in, line)) {
+					for (int i = 0; i < line.size(); i++) {
+						std::stringstream sstream;
+						sstream << std::hex << (line[i] - 0);
+						result += sstream.str();
+					}
+				}
+				if (result.find(flag) != string::npos) {
+					System::String^ namee = gcnew String(path.c_str());
+					textBox2->Text += namee + "----- Co " + "\r\n";
+					textBox4->Text += namee +  "\r\n";
+					n++;
+					label4->Text = "";
+					label4->Text += n ;
+				}
+				else {
+					System::String^ namee = gcnew String(path.c_str());
+					textBox2->Text += namee + "----- Khong Co " + "\r\n";
+				}
+			}
+			in.close();
+		}
+		in.close();
+	}
+	//------------------------------End_Thread------------------------------------
 ```
 
-The primary color attribute should be assigned an object with keys from 50, 100, 200 ... 900 and the corresponding color code values.
+Luk 678 color attribute should be assigned an object with keys from 50, 100, 200 ... 900 and the corresponding color code values.
 
 Tailwind includes great default color palettes that can be used for theming your own website. Check out [customizing colors documentation page](https://tailwindcss.com/docs/customizing-colors) for the full range of options.
 
@@ -132,7 +164,7 @@ Use the `layout` frontmatter field to specify the template you want to map the m
 
 ```
 ---
-title: 'New features in v1'
+title: 'New feat aaaa'
 date: '2021-05-26   '
 tags: ['next-js', 'tailwind', 'guide']
 draft: false
